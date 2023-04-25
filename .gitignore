@@ -1,14 +1,14 @@
 # This .gitignore file should be placed at the root of your Unity project directory
 #
 # Get latest from https://github.com/github/gitignore/blob/main/Unity.gitignore
-#
-/[Ll]ibrary/
-/[Tt]emp/
-/[Oo]bj/
-/[Bb]uild/
-/[Bb]uilds/
-/[Ll]ogs/
-/[Uu]ser[Ss]ettings/
+#
+RPG Project/[Ll]ibrary/
+RPG Project/[Tt]emp/
+RPG Project/[Oo]bj/
+RPG Project/[Bb]uild/
+RPG Project/[Bb]uilds/
+RPG Project/[Ll]ogs/
+RPG Project/[Uu]ser[Ss]ettings/
 
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
