@@ -151,6 +151,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d47b0662bce32f46ac71aced9da43ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveSpeed: 1
+  collisionOffset: 0.02
+  movementFilter:
+    useTriggers: 0
+    useLayerMask: 0
+    useDepth: 0
+    useOutsideDepth: 0
+    useNormalAngle: 0
+    useOutsideNormalAngle: 0
+    layerMask:
+      serializedVersion: 2
+      m_Bits: 0
+    minDepth: 0
+    maxDepth: 0
+    minNormalAngle: 0
+    maxNormalAngle: 0
 --- !u!61 &8180199176702482106
 BoxCollider2D:
   m_ObjectHideFlags: 0
