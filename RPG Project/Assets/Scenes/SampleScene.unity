@@ -149,7 +149,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 55880649}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.029, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1269,9 +1269,14 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: -1745823031, guid: c653daf649d388141b6d557690225028, type: 3}
+    - target: {fileID: 5974832715765069372, guid: 3830c077b5663904c85695a672163d5b, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7347433722891988198, guid: 3830c077b5663904c85695a672163d5b, type: 3}
       propertyPath: collisionOffset
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5974832715765069372, guid: 3830c077b5663904c85695a672163d5b, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 3830c077b5663904c85695a672163d5b, type: 3}
