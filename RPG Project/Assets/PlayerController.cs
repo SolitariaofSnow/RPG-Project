@@ -4,9 +4,9 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
-
-
-
+    void OnMove(InputValue movementValue) {
+        movementInput = movementValue.Get<Vector2>();
+    }
 
     public float moveSpeed = 1f;
     public float collisionOffset = 0.05f;
@@ -21,10 +21,8 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
     }
-    private void FixedUpdate()
-    {
-        if (movementInput != Vector2.zero)
-        {
+    private void FixedUpdate() {
+        if(movementInput != Vector2.zero){
             bool success = TryMove(movementInput);
 
             if (!success)
@@ -36,35 +34,20 @@ public class PlayerController : MonoBehaviour
                     success = TryMove(new Vector2(0, movementInput.y));
                 }
             }
-
         }
-
     }
-
-    private bool TryMove(Vector2 direction)
-    {
+    private bool TryMove(Vector2 direction) {
 
         int count = rb.Cast(
-              direction,
-              movementFilter,
-              castCollisions,
-              moveSpeed * Time.fixedDeltaTime + collisionOffset);
+                direction,
+                movementFilter,
+                castCollisions,
+                moveSpeed * Time.fixedDeltaTime + collisionOffset);
 
-        if (count == 0)
-        {
+        if(count == 0) {
 
             rb.MovePosition(rb.position + direction * moveSpeed * Time.fixedDeltaTime);
             return true;
-        }
-        else
-
-            return false;
-    }
-
-
-
-    void OnMove(InputValue movementValue)
-    {
-        movementInput = movementValue.Get<Vector2>();
+        } else return false;
     }
 }
