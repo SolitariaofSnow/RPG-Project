@@ -12,10 +12,12 @@ public class OverworldMenu : MonoBehaviour {
     private class MenuOption {
         public MenuOption(string name, delegate*<void> select)
             : this(select, name, true) {};
-        public static delegate*<void> Select;
+        public delegate*<void> Select;
         public string name;
         public bool enabled = true;
     }
+
+    public menuOption[] options = {};
 
     void NavigateMenu() { /* TODO */ }
     void DrawMenu() { /* TODO */ }
