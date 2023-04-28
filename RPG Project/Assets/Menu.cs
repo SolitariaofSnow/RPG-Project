@@ -17,8 +17,6 @@ public class OverworldMenu : MonoBehaviour {
         public bool enabled = true;
     }
 
-    public menuOption[] options = {};
-
     void NavigateMenu() { /* TODO */ }
     void DrawMenu() { /* TODO */ }
 
