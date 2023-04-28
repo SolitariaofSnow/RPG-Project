@@ -15,6 +15,12 @@ public unsafe class OverworldMenu : MonoBehaviour {
         public bool enabled = true;
     }
 
+    public void Update() {
+        if (Input.GetKeyDown(KeyCode.Escape)) MenuOpen = !MenuOpen;
+        if (!MenuOpen) return;
+        options[(int)SubMenu.Load].enabled = SaveDataManager.CanLoad() && GameFlag.CanLoad;
+    }
+
     void NavigateMenu() { /* TODO */ }
     void DrawMenu() { /* TODO */ }
 
@@ -62,6 +68,15 @@ public unsafe class OverworldMenu : MonoBehaviour {
         // close menu
         MenuOpen = false;
     }
+
+    private enum SubMenu {
+        Party = 0,
+        Inventory = 1,
+        Save = 2,
+        Load = 3,
+        Quit = 4,
+        Close = 5
+    };
 
     private MenuOption[] options = {
         new MenuOption("party", &SelectParty),
