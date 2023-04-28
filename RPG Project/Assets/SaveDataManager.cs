@@ -10,7 +10,7 @@ public abstract class DataObject {
 }
 
 public static class SaveDataManager {
-    public static void Save(string filename) {
+    public static void Save(string filename = Config.SaveFile) {
         if (SaveData != null) SaveData.Clear();
         foreach (DataObject d in SavableData)
             SaveData.Add(d.DataName, d.Save());
@@ -18,7 +18,7 @@ public static class SaveDataManager {
         // TODO: Encrypt save data
         System.IO.File.WriteAllText(filename, json);
     }
-    public static void Load(string filename) {
+    public static void Load(string filename = Config.SaveFile) {
         string json = System.IO.File.ReadAllText(filename);
         // TODO: decrypt save data
         LoadData = JsonUtility.FromJson<Dictionary<string, string>>(json);
