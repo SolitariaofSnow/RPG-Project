@@ -37,9 +37,11 @@ public unsafe class OverworldMenu : MonoBehaviour {
     static void SelectSave() {
         // open save menu
         state = MenuState.Save;
-        /* TODO
-         * This is where the menu stuff actually happens
-         */
+
+        // TODO: Are you sure you want to save?
+
+        //SaveDataManager.Save(Config.SaveFile);
+
         state = MenuState.Main;
     }
     static void SelectLoad() {
