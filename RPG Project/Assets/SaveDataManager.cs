@@ -11,17 +11,20 @@ public abstract class DataObject {
 
 public static class SaveDataManager {
     public static void Save(string filename) {
-        if (saveData != null) saveData.Clear();
+        if (SaveData != null) SaveData.Clear();
         foreach (DataObject d in SavableData)
-            saveData.Add(d.DataName, d.Save());
-        string json = JsonUtility.ToJson(saveData);
+            SaveData.Add(d.DataName, d.Save());
+        string json = JsonUtility.ToJson(SaveData);
+        // TODO: Encrypt save data
         System.IO.File.WriteAllText(filename, json);
     }
     public static void Load(string filename) {
         string json = System.IO.File.ReadAllText(filename);
-        loadData = JsonUtility.FromJson<Dictionary<string, string>>(json);
+        // TODO: decrypt save data
+        LoadData = JsonUtility.FromJson<Dictionary<string, string>>(json);
 
-        foreach(KeyValuePair<string, string> d in saveData) {
+        foreach(KeyValuePair<string, string> d in SaveData) {
+#nullable enable
             DataObject? obj = null;
             // locate the correct DataObject by name
             foreach (DataObject o in SavableData) {
@@ -30,14 +33,15 @@ public static class SaveDataManager {
                     break;
                 }
             }
-            if (obj == null) throw new System.FormatException(String.Format("Load Failed: {0} not found", d.Key));
+            if (obj == null) throw new System.FormatException(string.Format("Load Failed: {0} not found", d.Key));
             obj.Load(d.Value);
+#nullable disable
         }
     }
     // Register DataObject to be saved
     public static void Register(ref DataObject obj) {
         System.ArgumentException e = new System.ArgumentException(
-                String.Format("DataObject {0} already registered", obj.DataName));
+                string.Format("DataObject {0} already registered", obj.DataName));
 
         // Enforce no duplicate DataObjects
         if(SavableData.Contains(obj))
