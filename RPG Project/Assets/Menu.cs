@@ -40,16 +40,17 @@ public unsafe class OverworldMenu : MonoBehaviour {
 
         // TODO: Are you sure you want to save?
 
-        //SaveDataManager.Save(Config.SaveFile);
+        SaveDataManager.Save(Config.SaveFile);
 
         state = MenuState.Main;
     }
     static void SelectLoad() {
         // open load menu
         state = MenuState.Load;
-        /* TODO
-         * This is where the menu stuff actually happens
-         */
+        // TODO: Are you sure you want to load?
+
+        SaveDataManager.Load(Config.SaveFile);
+
         state = MenuState.Main;
     }
     static void SelectQuit() {
