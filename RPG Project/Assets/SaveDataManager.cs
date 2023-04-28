@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public interface DataObject {
-    public virtual string Save();
-    public virtual void Load(string data);
+public abstract class DataObject {
+    public abstract string Save();
+    public abstract void Load(string data);
     public string DataName { get; }
     private const string DataName;
 }
