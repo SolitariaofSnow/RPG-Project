@@ -7,7 +7,6 @@ public abstract class DataObject {
     public abstract string Save();
     public abstract void Load(string data);
     public string DataName { get; }
-    private const string DataName;
 }
 
 public static class SaveDataManager {
@@ -48,8 +47,8 @@ public static class SaveDataManager {
                 throw e;
         SavableData.Add(obj);
     }
-    private static IDictionary<string, string>? SaveData = new Dictionary<string, string>();
-    private static IDictionary<string, string>? LoadData = new Dictionary<string, string>();
+    private static IDictionary<string, string> SaveData = new Dictionary<string, string>();
+    private static IDictionary<string, string> LoadData = new Dictionary<string, string>();
     private static List<DataObject> SavableData = new List<DataObject>();
 }
 
