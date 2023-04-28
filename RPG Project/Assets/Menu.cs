@@ -7,11 +7,9 @@ using UnityEngine.InputSystem;
 // TODO: using Inventory = ???;
 
 // A menu class for the overworld
-public class OverworldMenu : MonoBehaviour {
-
-    private class MenuOption {
-        public MenuOption(string name, delegate*<void> select)
-            : this(select, name, true) {};
+public unsafe class OverworldMenu : MonoBehaviour {
+    private unsafe class MenuOption {
+        public MenuOption(string name, delegate*<void> select){}
         public delegate*<void> Select;
         public string name;
         public bool enabled = true;
@@ -20,46 +18,46 @@ public class OverworldMenu : MonoBehaviour {
     void NavigateMenu() { /* TODO */ }
     void DrawMenu() { /* TODO */ }
 
-    void SelectParty() {
+    static void SelectParty() {
         // open party menu
-        this.state = MenuState.Party;
+        state = MenuState.Party;
         /* TODO
          * This is where the menu stuff actually happens
          */
-        this.state = MenuState.Main;
+        state = MenuState.Main;
     }
-    void SelectInventory() {
+    static void SelectInventory() {
         // open inventory menu
-        this.state = MenuState.Inventory;
+        state = MenuState.Inventory;
         /* TODO
          * This is where the menu stuff actually happens
          */
-        this.state = MenuState.Main;
+        state = MenuState.Main;
     }
-    void SelectSave() {
+    static void SelectSave() {
         // open save menu
-        this.state = MenuState.Save;
+        state = MenuState.Save;
         /* TODO
          * This is where the menu stuff actually happens
          */
-        this.state = MenuState.Main;
+        state = MenuState.Main;
     }
-    void SelectLoad() {
+    static void SelectLoad() {
         // open load menu
-        this.state = MenuState.Load;
+        state = MenuState.Load;
         /* TODO
          * This is where the menu stuff actually happens
          */
-        this.state = MenuState.Main;
+        state = MenuState.Main;
     }
-    void SelectQuit() {
+    static void SelectQuit() {
         // open quit menu
-        this.state = MenuState.Quit;
+        state = MenuState.Quit;
         // call some quit function
     }
-    void SelectClose() {
+    static void SelectClose() {
         // close menu
-        this.menuOpen = false;
+        MenuOpen = false;
     }
 
     private MenuOption[] options = {
@@ -80,7 +78,7 @@ public class OverworldMenu : MonoBehaviour {
         Quit
     };
 
-    private MenuState state = MenuState.Main;
+    private static MenuState state = MenuState.Main;
     private static uint selected = 0;
     private static bool MenuOpen = false;
 }
