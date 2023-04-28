@@ -1,7 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using UnityEngine;
 
 [System.Serializable]
@@ -17,12 +15,12 @@ public static class SaveDataManager {
         if (saveData != null) saveData.Clear();
         foreach (DataObject d in SavableData)
             saveData.Add(d.DataName, d.Save());
-        string json = JsonSerializer.Serialize(saveData);
+        string json = JsonUtility.ToJson(saveData);
         System.IO.File.WriteAllText(filename, json);
     }
     public static void Load(string filename) {
         string json = System.IO.File.ReadAllText(filename);
-        loadData = JsonSerializer.Deserialize<IDictionary<string, string>>(json);
+        loadData = JsonUtility.FromJson<Dictionary<string, string>>(json);
 
         foreach(KeyValuePair<string, string> d in saveData) {
             DataObject? obj = null;
