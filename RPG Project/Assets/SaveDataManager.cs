@@ -51,6 +51,9 @@ public static class SaveDataManager {
                 throw e;
         SavableData.Add(obj);
     }
+    public static bool CanLoad(string filename = Config.SaveFile) {
+        return System.IO.File.Exists(filename);
+    }
     private static IDictionary<string, string> SaveData = new Dictionary<string, string>();
     private static IDictionary<string, string> LoadData = new Dictionary<string, string>();
     private static List<DataObject> SavableData = new List<DataObject>();
