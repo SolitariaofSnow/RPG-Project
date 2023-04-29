@@ -21,7 +21,7 @@ public class EnemyStateMachine : MonoBehaviour {
     private float max_cooldown = 5f;
     //this gameobject
     private Vector3 startposition;
-
+    private bool actionStarted = false;
     void Start()
     {
         CurrentState = TurnState.PROCESSING; 
@@ -48,6 +48,7 @@ public class EnemyStateMachine : MonoBehaviour {
             break;
 
             case(TurnState.ACTION):
+            StartCoroutine(TimeForAction());
 
             break;
 
@@ -77,5 +78,27 @@ public class EnemyStateMachine : MonoBehaviour {
         myAttack.Attacker = this.gameObject;
         myAttack.Defender = BSM.HeroesInBattle[Random.Range(0, BSM.HeroesInBattle.Count)];
         BSM.CollectActions (myAttack);
+    }
+
+    private IEnumerator TimeForAction()
+    {
+        if(actionStarted)
+        {
+            yield break;
+        }
+
+        actionStarted = true;
+
+        //TODO:animations 
+        //animate the enemy near the hero to attack
+        //wait
+        //do damage
+        //animate return to start 
+        //remove performer from BSM list as to not attack twice
+        //reset BSM
+        actionStarted = false;
+        //reset this enemy state 
+        cur_cooldown = 0f;
+        CurrentState = TurnState.PROCESSING;
     }
 }
