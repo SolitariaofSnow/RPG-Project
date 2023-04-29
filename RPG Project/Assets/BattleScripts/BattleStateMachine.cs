@@ -1,20 +1,30 @@
+using System;
 using System.Security.AccessControl;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 [System.Serializable]
 public class BattleStateMachine : MonoBehaviour
 {
     public enum PerformAction
     {
-        WAITING,
+        WAIT,
         TAKEACTION,
         PERFORMACTION,
     }
     public PerformAction BattleStates;
+
+    public List<HandleTurn> PerformList = new List<HandleTurn> ();
+    public List<GameObject> HeroesInBattle = new List<GameObject> (); 
+    public List<GameObject> EnemiesInBattle = new List<GameObject> ();
+
+
     void Start()
     {
-        BattleStates = PerformAction.WAITING;
+        BattleStates = PerformAction.WAIT;
+        EnemiesInBattle.AddRange (GameObject.FindGameObjectsWithTag("Enemy"));
+        HeroesInBattle.AddRange (GameObject.FindGameObjectsWithTag("Hero"));
     }
 
     
@@ -23,7 +33,7 @@ public class BattleStateMachine : MonoBehaviour
         switch (BattleStates)
         {
             
-           case(PerformAction.WAITING):
+           case(PerformAction.WAIT):
 
            break;
 
@@ -35,5 +45,11 @@ public class BattleStateMachine : MonoBehaviour
 
            break;
         }
-    }
+  }
+     public void CollectActions(HandleTurn input)
+        {
+            PerformList.Add(input); 
+        }
 }
+
+

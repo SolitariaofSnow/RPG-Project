@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyStateMachine : MonoBehaviour {
-
+    private BattleStateMachine BSM; 
     public BaseEnemy enemy;
 
-     public enum TurnState
+    public enum TurnState
     {
         PROCESSING,
-        ADDTOLIST,
+        CHOOSEACTION,
         WAITING,
-        SELECTING,
         ACTION,
         DEAD
     };
@@ -20,30 +19,31 @@ public class EnemyStateMachine : MonoBehaviour {
     //for the progress bar 
     private float cur_cooldown = 0f;
     private float max_cooldown = 5f;
+    //this gameobject
+    private Vector3 startposition;
 
     void Start()
     {
         CurrentState = TurnState.PROCESSING; 
+        BSM = GameObject.Find("BattleManager").GetComponent<BattleStateMachine> ();
+        startposition = transform.position;
     }
 
     // Update is called once per frame
     void Update()
     {
-         switch(CurrentState)
+        switch(CurrentState)
         {
             case(TurnState.PROCESSING):
-                    UpgradeProgressBar ();
+                    UpdateProgressBar ();
             break;
 
-            case(TurnState.ADDTOLIST):
-
+            case(TurnState.CHOOSEACTION):
+                ChooseAction ();
+                CurrentState = TurnState.WAITING;
             break;
 
             case(TurnState.WAITING):
-
-            break;
-
-            case(TurnState.SELECTING):
 
             break;
 
@@ -61,13 +61,21 @@ public class EnemyStateMachine : MonoBehaviour {
         
         };
     }
-     void UpgradeProgressBar()
+     void UpdateProgressBar()
     {
         cur_cooldown = cur_cooldown + Time.deltaTime;
         if(cur_cooldown >= max_cooldown)
         {
-            CurrentState = TurnState.ADDTOLIST; 
+            CurrentState = TurnState.CHOOSEACTION; 
         }
     }
 
+    void ChooseAction()
+    {
+        HandleTurn myAttack = new HandleTurn ();
+        myAttack.Name = this.enemy.name;
+        myAttack.Attacker = this.gameObject;
+        myAttack.Defender = BSM.HeroesInBattle[Random.Range(0, BSM.HeroesInBattle.Count)];
+        BSM.CollectActions (myAttack);
+    }
 }
