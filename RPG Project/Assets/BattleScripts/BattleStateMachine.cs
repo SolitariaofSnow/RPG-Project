@@ -32,9 +32,11 @@ public class BattleStateMachine : MonoBehaviour
     {
         switch (BattleStates)
         {
-            
            case(PerformAction.WAIT):
-
+            if(PerformList.Count > 0)
+            {
+                BattleStates = PerformAction.TAKEACTION;
+            }
            break;
 
            case(PerformAction.TAKEACTION):
