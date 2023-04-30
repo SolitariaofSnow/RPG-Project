@@ -37,34 +37,33 @@ public class EnemyStateMachine : MonoBehaviour {
         switch(CurrentState)
         {
             case(TurnState.PROCESSING):
-                    UpdateProgressBar ();
-            break;
+                UpdateProgressBar ();
+                break;
 
             case(TurnState.CHOOSEACTION):
-                ChooseAction ();
+                ChooseAction();
                 CurrentState = TurnState.WAITING;
-            break;
+                break;
 
             case(TurnState.WAITING):
 
-            break;
+                break;
 
             case(TurnState.ACTION):
-            StartCoroutine(TimeForAction());
+                StartCoroutine(TimeForAction());
 
-            break;
+                break;
 
             case(TurnState.DEAD):
 
-            break;
+                break;
 
             default:
                 throw new System.ArgumentException("Bad Hero State");
-            break;
-        
+                break;
         };
     }
-     void UpdateProgressBar()
+    void UpdateProgressBar()
     {
         cur_cooldown = cur_cooldown + Time.deltaTime;
         if(cur_cooldown >= max_cooldown)
@@ -75,14 +74,14 @@ public class EnemyStateMachine : MonoBehaviour {
 
     void ChooseAction()
     {
-        HandleTurn myAttack = new HandleTurn ();
+        HandleTurn myAttack = new HandleTurn();
         myAttack.Name = this.enemy.name;
         myAttack.Type = "Enemy";
         myAttack.Attacker = this.gameObject;
         myAttack.Defender = BSM.HeroesInBattle[Random.Range(0, BSM.HeroesInBattle.Count)];
         BSM.CollectActions (myAttack);
     }
- 
+
     private IEnumerator TimeForAction()
     {
         if(actionStarted)
@@ -94,22 +93,25 @@ public class EnemyStateMachine : MonoBehaviour {
 
         //TODO:animations 
         //animate the enemy near the hero to attack
+        Vector3 StartPosition = this.gameObject.transform.position;
         Vector3 HeroPosition = new Vector3(HeroToAttack.transform.position.x-1.5f, HeroToAttack.transform.position.y-1.5f);
         while(MoveTowardsEnemy(HeroPosition)) {yield return null;}
         //wait
         //do damage
         //animate return to start 
         //remove performer from BSM list as to not attack twice
+        BSM.ActionComplete();
+        this.gameObject.transform.position = StartPosition;
         //reset BSM
         actionStarted = false; 
         //reset this enemy state 
         cur_cooldown = 0f;
         CurrentState = TurnState.PROCESSING;
     }
-       private bool MoveTowardsEnemy(Vector3 target)
+    private bool MoveTowardsEnemy(Vector3 target)
     {
         return target != (transform.position = Vector3.MoveTowards(transform.position, target, animSpeed * Time.deltaTime));
     }
 
-    
+
 }

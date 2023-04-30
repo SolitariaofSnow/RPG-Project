@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class HeroStateMachine : MonoBehaviour {
 
-   public BaseHero hero; 
+   public BaseHero hero;
 
    public enum TurnState
     {
@@ -60,7 +60,6 @@ public class HeroStateMachine : MonoBehaviour {
             default:
                 throw new System.ArgumentException("Bad Hero State");
             break;
-        
         };
     }
     void UpgradeProgressBar()
