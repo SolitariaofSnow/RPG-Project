@@ -22,7 +22,7 @@ public class EnemyStateMachine : MonoBehaviour {
     //this gameobject
     private Vector3 startposition;
     private bool actionStarted = false;
-    private GameObject HeroToAttack;
+    public GameObject HeroToAttack;
     private float animSpeed = 5f;
     void Start()
     {
@@ -77,6 +77,7 @@ public class EnemyStateMachine : MonoBehaviour {
     {
         HandleTurn myAttack = new HandleTurn ();
         myAttack.Name = this.enemy.name;
+        myAttack.Type = "Enemy";
         myAttack.Attacker = this.gameObject;
         myAttack.Defender = BSM.HeroesInBattle[Random.Range(0, BSM.HeroesInBattle.Count)];
         BSM.CollectActions (myAttack);

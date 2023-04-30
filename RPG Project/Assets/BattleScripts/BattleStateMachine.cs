@@ -27,7 +27,7 @@ public class BattleStateMachine : MonoBehaviour
         HeroesInBattle.AddRange (GameObject.FindGameObjectsWithTag("Hero"));
     }
 
-    
+   
     void Update()
     {
         switch (BattleStates)
@@ -40,6 +40,17 @@ public class BattleStateMachine : MonoBehaviour
            break;
 
            case(PerformAction.TAKEACTION):
+                GameObject performer = GameObject.Find (PerformList[0].Name);
+                if(PerformList[0].Type == "Enemy")
+                {
+                    EnemyStateMachine ESM = performer.GetComponent<EnemyStateMachine> ();
+                    ESM.HeroToAttack = PerformList[0].Defender;
+                    ESM.CurrentState = EnemyStateMachine.TurnState.ACTION;
+                }
+                if(PerformList[0].Type == "Hero")
+                {
+                    
+                }
 
            break;
 
@@ -48,10 +59,12 @@ public class BattleStateMachine : MonoBehaviour
            break;
         }
   }
-     public void CollectActions(HandleTurn input)
+   public void CollectActions(HandleTurn input)
         {
             PerformList.Add(input); 
         }
+
+     
 }
 
 

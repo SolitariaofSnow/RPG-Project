@@ -3126,6 +3126,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1577203029 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2932518067183263366, guid: 3830c077b5663904c85695a672163d5b, type: 3}
+  m_PrefabInstance: {fileID: 7150483928994090187}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1593426840
 GameObject:
   m_ObjectHideFlags: 0
@@ -3647,7 +3652,7 @@ GameObject:
   - component: {fileID: 1752924957}
   - component: {fileID: 1752924959}
   m_Layer: 0
-  m_Name: enemy
+  m_Name: Enemy1
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3745,6 +3750,7 @@ MonoBehaviour:
     baseDEF: 3
     curDEF: 3
   CurrentState: 0
+  HeroToAttack: {fileID: 1577203029}
 --- !u!1 &1887756365
 GameObject:
   m_ObjectHideFlags: 0
@@ -3972,7 +3978,7 @@ GameObject:
   - component: {fileID: 1991051095}
   - component: {fileID: 1991051097}
   m_Layer: 0
-  m_Name: enemy (1)
+  m_Name: Enemy2
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4070,6 +4076,7 @@ MonoBehaviour:
     baseDEF: 6
     curDEF: 6
   CurrentState: 0
+  HeroToAttack: {fileID: 0}
 --- !u!1 &2089069236
 GameObject:
   m_ObjectHideFlags: 0

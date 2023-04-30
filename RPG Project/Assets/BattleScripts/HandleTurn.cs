@@ -5,6 +5,7 @@ using UnityEngine;
 public class HandleTurn{ 
 
     public string Name;//name of attacker
+    public string Type;
     public GameObject Attacker;//who attacks
     public GameObject Defender;//who defends
     //which attack is performed 
