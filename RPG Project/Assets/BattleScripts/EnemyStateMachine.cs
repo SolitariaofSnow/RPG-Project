@@ -94,14 +94,14 @@ public class EnemyStateMachine : MonoBehaviour {
         //TODO:animations 
         //animate the enemy near the hero to attack
         Vector3 StartPosition = this.gameObject.transform.position;
-        Vector3 HeroPosition = new Vector3(HeroToAttack.transform.position.x-1.5f, HeroToAttack.transform.position.y-1.5f);
+        Vector3 HeroPosition = new Vector3(HeroToAttack.transform.position.x+.25f, HeroToAttack.transform.position.y,0f);
         while(MoveTowardsEnemy(HeroPosition)) {yield return null;}
         //wait
         //do damage
         //animate return to start 
         //remove performer from BSM list as to not attack twice
         BSM.ActionComplete();
-        this.gameObject.transform.position = StartPosition;
+        while(MoveTowardsEnemy(StartPosition)) {yield return null;}
         //reset BSM
         actionStarted = false; 
         //reset this enemy state 
