@@ -19,7 +19,23 @@ public class BattleStateMachine : MonoBehaviour
     public List<HandleTurn> PerformList = new List<HandleTurn>();
     public List<GameObject> HeroesInBattle = new List<GameObject>();
     public List<GameObject> EnemiesInBattle = new List<GameObject>();
+  
 
+    public enum HeroGUI
+    {
+        ACTIVATE, //activates UI
+        WAITING, // waiting for input
+        INPUT1, //basic attack
+        INPUT2, //selected enemy
+        DONE
+
+
+    }
+
+    public HeroGUI HeroInput; 
+    public List<GameObject> HerosToManage = new List<GameObject> ();
+    private HandleTurn HeroChoice;
+    public GameObject EnemyButton;
 
     void Start()
     {
@@ -27,7 +43,7 @@ public class BattleStateMachine : MonoBehaviour
         EnemiesInBattle.AddRange(GameObject.FindGameObjectsWithTag("Enemy"));
         HeroesInBattle.AddRange(GameObject.FindGameObjectsWithTag("Hero"));
     }
-
+    
     void Update()
     {
         switch (BattleStates)
@@ -60,7 +76,18 @@ public class BattleStateMachine : MonoBehaviour
 
                 break;
         }
+
+
+    void EnemyButtons()
+    {
+        foreach(GameObject enemy in EnemiesInBattle)
+        {
+            GameObject newButton = Instantiate(EnemyButton) as GameObject;
+        }
     }
+
+    }
+   
     public void CollectActions(HandleTurn input)
     {
         PerformList.Add(input);
