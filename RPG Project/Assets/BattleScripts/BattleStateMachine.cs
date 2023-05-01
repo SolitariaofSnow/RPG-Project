@@ -10,7 +10,7 @@ using UnityEngine.UI;
 public class BattleStateMachine : MonoBehaviour
 {
 
-    internal class EnemyButtonSelect
+    internal class EnemyButtonSelect : MonoBehaviour
 {
     public GameObject EnemyPrefab;
     public GameObject BattleManager;
@@ -33,7 +33,7 @@ public class BattleStateMachine : MonoBehaviour
 
             EnemyStateMachine cur_enemy = enemy.GetComponent<EnemyStateMachine> ();
 
-            Text buttonText = newButton.transform.Find("Text").gameObject.GetComponent<Text>();
+            Text buttonText = newButton.GetComponent<Text>();
             buttonText.text = cur_enemy.enemy.name;
 
             button.EnemyPrefab = enemy;
@@ -46,10 +46,10 @@ public class BattleStateMachine : MonoBehaviour
      void Start()
     {
         BattleStates = PerformAction.WAIT;
-        EnemyButton();
         EnemiesInBattle.AddRange(GameObject.FindGameObjectsWithTag("Enemy"));
         HeroesInBattle.AddRange(GameObject.FindGameObjectsWithTag("Hero"));
 
+        EnemyButton();
     }
 
 
