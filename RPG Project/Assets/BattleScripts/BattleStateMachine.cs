@@ -4,10 +4,57 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.UI;
 
 [System.Serializable]
 public class BattleStateMachine : MonoBehaviour
 {
+
+    internal class EnemyButtonSelect
+{
+    public GameObject EnemyPrefab;
+    public GameObject BattleManager;
+    void start()
+    {
+     this.BattleManager = GameObject.Find("BattleManager");
+    }
+    
+    public void SelectEnemy(){
+        this.BattleManager.GetComponent<BattleStateMachine> ();
+         }
+}
+
+       void EnemyButton()
+    {
+        foreach(GameObject enemy in EnemiesInBattle)
+        {
+            GameObject newButton = Instantiate(EnemyButtons) as GameObject;
+            EnemyButtonSelect button = newButton.GetComponent<EnemyButtonSelect> ();
+
+            EnemyStateMachine cur_enemy = enemy.GetComponent<EnemyStateMachine> ();
+
+            Text buttonText = newButton.transform.Find("Text").gameObject.GetComponent<Text>();
+            buttonText.text = cur_enemy.enemy.name;
+
+            button.EnemyPrefab = enemy;
+            newButton.transform.SetParent (Spacer);
+
+            
+
+        }
+    } 
+     void Start()
+    {
+        BattleStates = PerformAction.WAIT;
+        EnemyButton();
+        EnemiesInBattle.AddRange(GameObject.FindGameObjectsWithTag("Enemy"));
+        HeroesInBattle.AddRange(GameObject.FindGameObjectsWithTag("Hero"));
+
+    }
+
+
+
+
     public enum PerformAction
     {
         WAIT,
@@ -35,14 +82,8 @@ public class BattleStateMachine : MonoBehaviour
     public HeroGUI HeroInput; 
     public List<GameObject> HerosToManage = new List<GameObject> ();
     private HandleTurn HeroChoice;
-    public GameObject EnemyButton;
-
-    void Start()
-    {
-        BattleStates = PerformAction.WAIT;
-        EnemiesInBattle.AddRange(GameObject.FindGameObjectsWithTag("Enemy"));
-        HeroesInBattle.AddRange(GameObject.FindGameObjectsWithTag("Hero"));
-    }
+    public GameObject EnemyButtons;
+    public Transform Spacer;
     
     void Update()
     {
@@ -77,16 +118,10 @@ public class BattleStateMachine : MonoBehaviour
                 break;
         }
 
-
-    void EnemyButtons()
-    {
-        foreach(GameObject enemy in EnemiesInBattle)
-        {
-            GameObject newButton = Instantiate(EnemyButton) as GameObject;
-        }
+    
+ 
     }
-
-    }
+    
    
     public void CollectActions(HandleTurn input)
     {
@@ -98,5 +133,4 @@ public class BattleStateMachine : MonoBehaviour
         if(PerformList.Count < 1) BattleStates = PerformAction.WAIT;
     }
 }
-
 

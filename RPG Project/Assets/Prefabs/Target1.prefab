@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 3339146155214751105}
   - component: {fileID: 8718509584783423857}
   - component: {fileID: 4982738556037982393}
+  - component: {fileID: 769614139139348439}
   m_Layer: 5
   m_Name: Target1
   m_TagString: Untagged
@@ -170,6 +171,20 @@ MonoBehaviour:
   m_FlexibleWidth: 0
   m_FlexibleHeight: 0
   m_LayoutPriority: 1
+--- !u!114 &769614139139348439
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1633490600113546440}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78ab9eaed01df6d45baa595043e65aae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EnemyPrefab: {fileID: 0}
+  BattleManager: {fileID: 0}
 --- !u!1 &2580298395081522049
 GameObject:
   m_ObjectHideFlags: 0
@@ -182,7 +197,7 @@ GameObject:
   - component: {fileID: 7529878864028187219}
   - component: {fileID: 2277282269583892755}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
