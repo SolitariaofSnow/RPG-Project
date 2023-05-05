@@ -20,32 +20,55 @@ public class BattleStateMachine : MonoBehaviour
 
                 EnemyStateMachine cur_enemy = enemy.GetComponent<EnemyStateMachine> ();
 
-                GameObject textGO = new GameObject();
-                textGO.transform.SetParent(spacer);
-                textGO.AddComponent<TextMeshProUGUI>();
+                TextGO = new GameObject();
+                TextGO.transform.SetParent(spacer);
+                TextGO.AddComponent<TextMeshProUGUI>();
 
-                this.buttonText = textGO.GetComponent<TextMeshProUGUI>();
+                this.buttonText = TextGO.GetComponent<TextMeshProUGUI>();
                 this.buttonText.text = cur_enemy.enemy.name;
                 // TODO: Set font, size
             }
 
             public void SelectEnemy() { /* todo */ }
             public GameObject EnemyParent;
+            public GameObject TextGO;
             public BattleStateMachine BattleManager;
             public TextMeshProUGUI buttonText;
         }
         /* ^^^^^ END OF ENEMY BUTTON SELECT  ^^^^^ */
+        public void Activate() {
+            if (this.Activity) return;
+            this.Activity = true;
+            this.CascadeActivity();
+        }
+
+        public void Add(GameObject enemy, BattleStateMachine battleManager, Transform spacer) {
+            GameObject newGO = new GameObject();
+            newGO.SetActive(Activity);
+
+            EnemyButtonSelect newEBS = newGO.AddComponent<EnemyButtonSelect>() as EnemyButtonSelect;
+            newEBS.init(enemy, battleManager, spacer);
+            newEBS.TextGO.SetActive(Activity);
+
+            this.Buttons.Add(new EnemyButton(newEBS, newGO));
+        }
+
         public void Awake() {
             // Load the Arial font from the Unity Resources folder.
             //arial = (Font)Resources.GetBuiltinResource(typeof(Font), "Arial.ttf");
         }
 
-        public void Add(GameObject enemy, BattleStateMachine battleManager, Transform spacer) {
-            GameObject newGO = new GameObject();
-            EnemyButtonSelect newEBS = newGO.AddComponent<EnemyButtonSelect>() as EnemyButtonSelect;
-            newGO.transform.Translate(Vector3.down * 50 * this.Buttons.Count);
-            newEBS.init(enemy, battleManager, spacer);
-            this.Buttons.Add(new EnemyButton(newEBS, newGO));
+        private void CascadeActivity() {
+            foreach (EnemyButton eb in this.Buttons) {
+                eb.gameObject.SetActive(this.Activity);
+                eb.Button.TextGO.SetActive(this.Activity);
+            }
+        }
+
+        public void Deactivate() {
+            if (!this.Activity) return;
+            this.Activity = false;
+            this.CascadeActivity();
         }
 
         public void Update() { /* TODO: logic for actually navigating/selecting */ }
@@ -59,6 +82,7 @@ public class BattleStateMachine : MonoBehaviour
             public GameObject gameObject { get; }
         }
         private List<EnemyButton> Buttons = new List<EnemyButton>();
+        private bool Activity = false;
         //private Font arial; // TODO: Load font elsewhere
     }
 
@@ -117,10 +141,6 @@ public class BattleStateMachine : MonoBehaviour
         switch (BattleStates)
         {
             case(PerformAction.WAIT):
-                if(PerformList.Count > 0)
-                {
-                    BattleStates = PerformAction.TAKEACTION;
-                }
                 break;
 
             case(PerformAction.TAKEACTION):
@@ -135,7 +155,15 @@ public class BattleStateMachine : MonoBehaviour
                 }
                 if(PerformList[0].Type == "Hero")
                 {
-
+                    HeroStateMachine HSM = performer.GetComponent<HeroStateMachine>();
+                    if(HSM.CurrentState == HeroStateMachine.TurnState.WAITING) {
+                        HSM.CurrentState = HeroStateMachine.TurnState.SELECTING;
+                        EnemyButtons.Activate();
+                    }
+                    else if(HSM.CurrentState != HeroStateMachine.TurnState.SELECTING) {
+                        HSM.CurrentState = HeroStateMachine.TurnState.ACTION;
+                        EnemyButtons.Deactivate();
+                    }
                 }
 
                 break;
@@ -153,11 +181,19 @@ public class BattleStateMachine : MonoBehaviour
     public void CollectActions(HandleTurn input)
     {
         PerformList.Add(input);
+        if(PerformList.Count > 0)
+        {
+            BattleStates = PerformAction.TAKEACTION;
+        }
     }
     public void ActionComplete() {
         Assert.AreNotEqual(PerformList.Count, 0);
         PerformList.RemoveAt(0);
         if(PerformList.Count < 1) BattleStates = PerformAction.WAIT;
+        else if(PerformList.Count > 0)
+        {
+            BattleStates = PerformAction.TAKEACTION;
+        }
     }
 }
 

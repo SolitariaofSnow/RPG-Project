@@ -37,7 +37,7 @@ public class EnemyStateMachine : MonoBehaviour {
         switch(CurrentState)
         {
             case(TurnState.PROCESSING):
-                if(BSM.BattleStates != BSM.PerformAction.TAKEACTION) UpdateProgressBar ();
+                if(BSM.BattleStates == BattleStateMachine.PerformAction.WAIT) UpdateProgressBar ();
                 break;
 
             case(TurnState.CHOOSEACTION):
@@ -51,7 +51,6 @@ public class EnemyStateMachine : MonoBehaviour {
 
             case(TurnState.ACTION):
                 StartCoroutine(TimeForAction());
-
                 break;
 
             case(TurnState.DEAD):
@@ -68,17 +67,17 @@ public class EnemyStateMachine : MonoBehaviour {
         cur_cooldown = cur_cooldown + Time.deltaTime;
         if(cur_cooldown >= max_cooldown)
         {
-            CurrentState = TurnState.CHOOSEACTION; 
+            CurrentState = TurnState.CHOOSEACTION;
         }
     }
 
     void ChooseAction()
     {
-        HandleTurn myAttack = new HandleTurn();
-        myAttack.Name = this.enemy.name;
-        myAttack.Type = "Enemy";
-        myAttack.Attacker = this.gameObject;
-        myAttack.Defender = BSM.HeroesInBattle[Random.Range(0, BSM.HeroesInBattle.Count)];
+        HandleTurn myAttack = new HandleTurn(
+                this.enemy.name,
+                "Enemy",
+                this.gameObject,
+                BSM.HeroesInBattle[Random.Range(0, BSM.HeroesInBattle.Count)]);
         BSM.CollectActions (myAttack);
     }
 
@@ -100,13 +99,15 @@ public class EnemyStateMachine : MonoBehaviour {
         //do damage
         //animate return to start 
         //remove performer from BSM list as to not attack twice
-        BSM.ActionComplete();
         while(MoveTowardsEnemy(StartPosition)) {yield return null;}
         //reset BSM
-        actionStarted = false; 
-        //reset this enemy state 
-        cur_cooldown = 0f;
+        BSM.ActionComplete();
         CurrentState = TurnState.PROCESSING;
+        cur_cooldown = 0f;
+        actionStarted = false;
+        //reset this enemy state
+        yield return null;
+
     }
     private bool MoveTowardsEnemy(Vector3 target)
     {
