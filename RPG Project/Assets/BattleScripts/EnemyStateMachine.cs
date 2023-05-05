@@ -37,7 +37,7 @@ public class EnemyStateMachine : MonoBehaviour {
         switch(CurrentState)
         {
             case(TurnState.PROCESSING):
-                UpdateProgressBar ();
+                if(BSM.BattleStates != BSM.PerformAction.TAKEACTION) UpdateProgressBar ();
                 break;
 
             case(TurnState.CHOOSEACTION):

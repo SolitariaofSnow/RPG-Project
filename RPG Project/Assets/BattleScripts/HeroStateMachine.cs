@@ -38,7 +38,7 @@ public class HeroStateMachine : MonoBehaviour {
         switch(CurrentState)
         {
             case(TurnState.PROCESSING):
-                    UpgradeProgressBar ();
+                if(BSM.BattleStates != BSM.PerformAction.TAKEACTION) UpdateProgressBar ();
             break;
 
             case(TurnState.ADDTOLIST):
