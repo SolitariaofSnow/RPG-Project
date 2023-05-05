@@ -5,51 +5,78 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.UI;
+using TMPro;
 
 [System.Serializable]
 public class BattleStateMachine : MonoBehaviour
 {
 
-    internal class EnemyButtonSelect : MonoBehaviour
-{
-    public GameObject EnemyPrefab;
-    public GameObject BattleManager;
-    void start()
-    {
-     this.BattleManager = GameObject.Find("BattleManager");
-    }
-    
-    public void SelectEnemy(){
-        this.BattleManager.GetComponent<BattleStateMachine> ();
-         }
-}
 
-       void EnemyButton()
+    public class EnemyTargetButtons : ScriptableObject {
+        private class EnemyButtonSelect : MonoBehaviour {
+            public void init(GameObject enemy, BattleStateMachine battleManager, Transform spacer) {
+                this.EnemyParent = enemy;
+                this.BattleManager = battleManager;
+
+                EnemyStateMachine cur_enemy = enemy.GetComponent<EnemyStateMachine> ();
+
+                GameObject textGO = new GameObject();
+                textGO.transform.SetParent(spacer);
+                textGO.AddComponent<TextMeshProUGUI>();
+
+                this.buttonText = textGO.GetComponent<TextMeshProUGUI>();
+                this.buttonText.text = cur_enemy.enemy.name;
+                // TODO: Set font, size
+            }
+
+            public void SelectEnemy() { /* todo */ }
+            public GameObject EnemyParent;
+            public BattleStateMachine BattleManager;
+            public TextMeshProUGUI buttonText;
+        }
+        /* ^^^^^ END OF ENEMY BUTTON SELECT  ^^^^^ */
+        public void Awake() {
+            // Load the Arial font from the Unity Resources folder.
+            //arial = (Font)Resources.GetBuiltinResource(typeof(Font), "Arial.ttf");
+        }
+
+        public void Add(GameObject enemy, BattleStateMachine battleManager, Transform spacer) {
+            GameObject newGO = new GameObject();
+            EnemyButtonSelect newEBS = newGO.AddComponent<EnemyButtonSelect>() as EnemyButtonSelect;
+            newGO.transform.Translate(Vector3.down * 50 * this.Buttons.Count);
+            newEBS.init(enemy, battleManager, spacer);
+            this.Buttons.Add(new EnemyButton(newEBS, newGO));
+        }
+
+        public void Update() { /* TODO: logic for actually navigating/selecting */ }
+
+        private struct EnemyButton {
+            public EnemyButton(EnemyButtonSelect b, GameObject g) {
+                Button = b;
+                gameObject = g;
+            }
+            public EnemyButtonSelect Button { get; }
+            public GameObject gameObject { get; }
+        }
+        private List<EnemyButton> Buttons = new List<EnemyButton>();
+        //private Font arial; // TODO: Load font elsewhere
+    }
+
+    void CreateEnemyButtons()
     {
+        this.EnemyButtons = ScriptableObject.CreateInstance<EnemyTargetButtons>();
         foreach(GameObject enemy in EnemiesInBattle)
         {
-            GameObject newButton = Instantiate(EnemyButtons) as GameObject;
-            EnemyButtonSelect button = newButton.GetComponent<EnemyButtonSelect> ();
-
-            EnemyStateMachine cur_enemy = enemy.GetComponent<EnemyStateMachine> ();
-
-            Text buttonText = newButton.GetComponent<Text>();
-            buttonText.text = cur_enemy.enemy.name;
-
-            button.EnemyPrefab = enemy;
-            newButton.transform.SetParent (Spacer);
-
-            
-
+            EnemyButtons.Add(enemy, this, Spacer);
         }
-    } 
-     void Start()
+    }
+    void Start()
     {
         BattleStates = PerformAction.WAIT;
         EnemiesInBattle.AddRange(GameObject.FindGameObjectsWithTag("Enemy"));
         HeroesInBattle.AddRange(GameObject.FindGameObjectsWithTag("Hero"));
 
-        EnemyButton();
+        CreateEnemyButtons();
     }
 
 
@@ -66,7 +93,7 @@ public class BattleStateMachine : MonoBehaviour
     public List<HandleTurn> PerformList = new List<HandleTurn>();
     public List<GameObject> HeroesInBattle = new List<GameObject>();
     public List<GameObject> EnemiesInBattle = new List<GameObject>();
-  
+
 
     public enum HeroGUI
     {
@@ -79,12 +106,12 @@ public class BattleStateMachine : MonoBehaviour
 
     }
 
-    public HeroGUI HeroInput; 
+    public HeroGUI HeroInput;
     public List<GameObject> HerosToManage = new List<GameObject> ();
     private HandleTurn HeroChoice;
-    public GameObject EnemyButtons;
+    public EnemyTargetButtons EnemyButtons;
     public Transform Spacer;
-    
+
     void Update()
     {
         switch (BattleStates)
@@ -118,11 +145,11 @@ public class BattleStateMachine : MonoBehaviour
                 break;
         }
 
-    
- 
+
+
     }
-    
-   
+
+
     public void CollectActions(HandleTurn input)
     {
         PerformList.Add(input);
