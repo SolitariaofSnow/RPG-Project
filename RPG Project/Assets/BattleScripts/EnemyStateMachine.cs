@@ -22,7 +22,7 @@ public class EnemyStateMachine : MonoBehaviour {
     //this gameobject
     private Vector3 startposition;
     private bool actionStarted = false;
-    public GameObject HeroToAttack;
+    public GameObject Target;
     private float animSpeed = 5f;
     void Start()
     {
@@ -93,13 +93,13 @@ public class EnemyStateMachine : MonoBehaviour {
         //TODO:animations 
         //animate the enemy near the hero to attack
         Vector3 StartPosition = this.gameObject.transform.position;
-        Vector3 HeroPosition = new Vector3(HeroToAttack.transform.position.x+.25f, HeroToAttack.transform.position.y,0f);
-        while(MoveTowardsEnemy(HeroPosition)) {yield return null;}
+        Vector3 TargetPosition = new Vector3(Target.transform.position.x+.25f, Target.transform.position.y,0f);
+        while(MoveTowardsObject(TargetPosition)) {yield return null;}
         //wait
         //do damage
         //animate return to start 
         //remove performer from BSM list as to not attack twice
-        while(MoveTowardsEnemy(StartPosition)) {yield return null;}
+        while(MoveTowardsObject(StartPosition)) {yield return null;}
         //reset BSM
         BSM.ActionComplete();
         CurrentState = TurnState.PROCESSING;
@@ -109,7 +109,7 @@ public class EnemyStateMachine : MonoBehaviour {
         yield return null;
 
     }
-    private bool MoveTowardsEnemy(Vector3 target)
+    private bool MoveTowardsObject(Vector3 target)
     {
         return target != (transform.position = Vector3.MoveTowards(transform.position, target, animSpeed * Time.deltaTime));
     }

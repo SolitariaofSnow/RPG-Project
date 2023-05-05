@@ -8,10 +8,10 @@ using UnityEngine.UI;
 
 public class HeroStateMachine : MonoBehaviour {
 
-   public BaseHero hero;
-   private BattleStateMachine BSM;
-   public GameObject BattleManager;
-   public enum TurnState
+    public BaseHero hero;
+    private BattleStateMachine BSM;
+    public GameObject BattleManager;
+    public enum TurnState
     {
         PROCESSING,
         ADDTOLIST,
@@ -26,6 +26,11 @@ public class HeroStateMachine : MonoBehaviour {
     private float cur_cooldown = 0f;
     private float max_cooldown = 5f;
     public Image ProgressBar;
+    //this gameobject
+    private Vector3 startposition;
+    private bool actionStarted = false;
+    public GameObject? Target = null;
+    private float animSpeed = 5f;
     void Start()
     {
         CurrentState = TurnState.PROCESSING;
@@ -38,31 +43,66 @@ public class HeroStateMachine : MonoBehaviour {
         {
             case(TurnState.PROCESSING):
                 if(BSM.BattleStates == BattleStateMachine.PerformAction.WAIT) UpdateProgressBar();
-            break;
+                break;
 
             case(TurnState.ADDTOLIST):
-                    BSM.HerosToManage.Add(this.gameObject);
-                    CurrentState = TurnState.WAITING;
-            break;
+                //BSM.HerosToManage.Add(this.gameObject); // TODO: idklol
+                BSM.CollectActions(new HandleTurn(gameObject.name, "Hero", gameObject));
+                CurrentState = TurnState.WAITING;
+                break;
 
             case(TurnState.WAITING):
-                BSM.CollectActions(new HandleTurn(gameObject.name, "Hero", gameObject));
-            break;
+                break;
 
             case(TurnState.SELECTING):
-            break;
+                break;
 
             case(TurnState.ACTION):
-                CurrentState = TurnState.PROCESSING;
-            break;
+                cur_cooldown = 0f;
+                float calc_cooldown = cur_cooldown / max_cooldown;
+                ProgressBar.transform.localScale = new Vector3(Mathf.Clamp(calc_cooldown, 0, 1), ProgressBar.transform.localScale.y, ProgressBar.transform.localScale.z);
+                StartCoroutine(TimeForAction());
+                break;
 
             case(TurnState.DEAD):
-            break;
+                break;
 
             default:
                 throw new System.ArgumentException("Bad Hero State");
-            break;
+                break;
         };
+    }
+    private IEnumerator TimeForAction()
+    {
+        if(actionStarted)
+        {
+            yield break;
+        }
+
+        actionStarted = true;
+
+        //TODO:animations 
+        //animate the enemy near the hero to attack
+        Vector3 StartPosition = this.gameObject.transform.position;
+        Vector3 TargetPosition = new Vector3(Target.transform.position.x-.25f, Target.transform.position.y,0f);
+        while(MoveTowardsObject(TargetPosition)) {yield return null;}
+        //wait
+        //do damage
+        //animate return to start 
+        //remove performer from BSM list as to not attack twice
+        while(MoveTowardsObject(StartPosition)) {yield return null;}
+        //reset BSM
+        BSM.ActionComplete();
+        CurrentState = TurnState.PROCESSING;
+        cur_cooldown = 0f;
+        actionStarted = false;
+        //reset this enemy state
+        yield return null;
+
+    }
+    private bool MoveTowardsObject(Vector3 target)
+    {
+        return target != (transform.position = Vector3.MoveTowards(transform.position, target, animSpeed * Time.deltaTime));
     }
     void UpdateProgressBar()
     {

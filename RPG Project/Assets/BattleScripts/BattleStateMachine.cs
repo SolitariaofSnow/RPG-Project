@@ -28,8 +28,14 @@ public class BattleStateMachine : MonoBehaviour
                 this.buttonText.text = cur_enemy.enemy.name;
                 // TODO: Set font, size
             }
+            public void Highlight() {
+                buttonText.outlineWidth = 0.2f;
+                buttonText.outlineColor = Color.yellow;
+            }
+            public void Unhighlight() {
+                buttonText.outlineWidth = 0.0f;
+            }
 
-            public void SelectEnemy() { /* todo */ }
             public GameObject EnemyParent;
             public GameObject TextGO;
             public BattleStateMachine BattleManager;
@@ -38,16 +44,18 @@ public class BattleStateMachine : MonoBehaviour
         /* ^^^^^ END OF ENEMY BUTTON SELECT  ^^^^^ */
         public void Activate() {
             if (this.Activity) return;
+            index = 0;
+            Buttons[index].Button.Highlight();
             this.Activity = true;
             this.CascadeActivity();
         }
 
-        public void Add(GameObject enemy, BattleStateMachine battleManager, Transform spacer) {
+        public void Add(GameObject enemy, Transform spacer) {
             GameObject newGO = new GameObject();
             newGO.SetActive(Activity);
 
             EnemyButtonSelect newEBS = newGO.AddComponent<EnemyButtonSelect>() as EnemyButtonSelect;
-            newEBS.init(enemy, battleManager, spacer);
+            newEBS.init(enemy, BSM, spacer);
             newEBS.TextGO.SetActive(Activity);
 
             this.Buttons.Add(new EnemyButton(newEBS, newGO));
@@ -67,11 +75,31 @@ public class BattleStateMachine : MonoBehaviour
 
         public void Deactivate() {
             if (!this.Activity) return;
+            Buttons[index].Button.Unhighlight();
             this.Activity = false;
             this.CascadeActivity();
         }
 
-        public void Update() { /* TODO: logic for actually navigating/selecting */ }
+        public void Register(BattleStateMachine bsm) {
+            this.BSM = bsm;
+        }
+
+        public void Update() {
+            if (!this.Activity) return;
+            if(Input.GetKeyDown(KeyCode.Keypad2)) {
+                Buttons[index].Button.Unhighlight();
+                index = (index + 1) % Buttons.Count;
+                Buttons[index].Button.Highlight();
+            } else if (Input.GetKeyDown(KeyCode.Keypad8)) {
+                Buttons[index].Button.Unhighlight();
+                index = (Buttons.Count + index - 1) % Buttons.Count;
+                Buttons[index].Button.Highlight();
+            } else if (Input.GetKeyDown(KeyCode.KeypadEnter)) {
+                GameObject target = Buttons[index].Button.EnemyParent;
+                BSM.PerformList[0].Defender = target;
+                BSM.ActionReady(target);
+            }
+        }
 
         private struct EnemyButton {
             public EnemyButton(EnemyButtonSelect b, GameObject g) {
@@ -81,17 +109,20 @@ public class BattleStateMachine : MonoBehaviour
             public EnemyButtonSelect Button { get; }
             public GameObject gameObject { get; }
         }
+        private BattleStateMachine BSM;
         private List<EnemyButton> Buttons = new List<EnemyButton>();
         private bool Activity = false;
         //private Font arial; // TODO: Load font elsewhere
+        private int index = 0;
     }
 
     void CreateEnemyButtons()
     {
         this.EnemyButtons = ScriptableObject.CreateInstance<EnemyTargetButtons>();
+        this.EnemyButtons.Register(this);
         foreach(GameObject enemy in EnemiesInBattle)
         {
-            EnemyButtons.Add(enemy, this, Spacer);
+            EnemyButtons.Add(enemy, Spacer);
         }
     }
     void Start()
@@ -138,6 +169,7 @@ public class BattleStateMachine : MonoBehaviour
 
     void Update()
     {
+        EnemyButtons.Update();
         switch (BattleStates)
         {
             case(PerformAction.WAIT):
@@ -150,7 +182,7 @@ public class BattleStateMachine : MonoBehaviour
                 if(PerformList[0].Type == "Enemy")
                 {
                     EnemyStateMachine ESM = performer.GetComponent<EnemyStateMachine>();
-                    ESM.HeroToAttack = PerformList[0].Defender;
+                    ESM.Target = PerformList[0].Defender;
                     ESM.CurrentState = EnemyStateMachine.TurnState.ACTION;
                 }
                 if(PerformList[0].Type == "Hero")
@@ -159,10 +191,6 @@ public class BattleStateMachine : MonoBehaviour
                     if(HSM.CurrentState == HeroStateMachine.TurnState.WAITING) {
                         HSM.CurrentState = HeroStateMachine.TurnState.SELECTING;
                         EnemyButtons.Activate();
-                    }
-                    else if(HSM.CurrentState != HeroStateMachine.TurnState.SELECTING) {
-                        HSM.CurrentState = HeroStateMachine.TurnState.ACTION;
-                        EnemyButtons.Deactivate();
                     }
                 }
 
@@ -194,6 +222,14 @@ public class BattleStateMachine : MonoBehaviour
         {
             BattleStates = PerformAction.TAKEACTION;
         }
+    }
+    public void ActionReady(GameObject target) {
+        GameObject performer = PerformList[0].Attacker;
+        HeroStateMachine HSM = performer.GetComponent<HeroStateMachine>();
+        HSM.CurrentState = HeroStateMachine.TurnState.ACTION;
+        HSM.Target = target;
+        EnemyButtons.Deactivate();
+        HSM.CurrentState = HeroStateMachine.TurnState.ACTION;
     }
 }
 
