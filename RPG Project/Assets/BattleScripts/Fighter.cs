@@ -19,6 +19,19 @@ public class Fighter : MonoBehaviour {
     public GameObject? Target = null;
     protected float animSpeed = 5f;
 
+    
+    public IDictionary<string, int> stats = new Dictionary<string, int>()
+    {
+    
+            {"HP", 20}.
+            {"MP", 20},
+            {"Strength", 10},
+            {"Dexterity", 10},
+            {"Lifeforce", 10},
+            {"Intellect", 10},
+            {"Charisma", 10}
+    };
+
     public enum TurnState
     {
         PROCESSING,
