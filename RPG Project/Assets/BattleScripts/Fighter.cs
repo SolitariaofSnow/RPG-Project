@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class Fighter : MonoBehaviour {
+#nullable enable
+
+
 
     protected BattleStateMachine BSM;
     public GameObject BattleManager;
@@ -23,7 +26,7 @@ public class Fighter : MonoBehaviour {
     public IDictionary<string, int> stats = new Dictionary<string, int>()
     {
     
-            {"HP", 20}.
+            {"HP", 20},
             {"MP", 20},
             {"Strength", 10},
             {"Dexterity", 10},

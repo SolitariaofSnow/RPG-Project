@@ -9,7 +9,15 @@ public class EnemyStateMachine : Fighter {
         base.Start();
         type = "Enemy";
     }
-
+    void ChooseAction()
+    {
+        HandleTurn myAttack = new HandleTurn(
+                this.enemy.name,
+                type,
+                this.gameObject,
+                BSM.HeroesInBattle[Random.Range(0, BSM.HeroesInBattle.Count)]);
+        BSM.CollectActions(myAttack);
+    }
     // Update is called once per frame
     public override void Update()
     {
@@ -42,13 +50,5 @@ public class EnemyStateMachine : Fighter {
         };
     }
 
-    void ChooseAction()
-    {
-        HandleTurn myAttack = new HandleTurn(
-                this.enemy.name,
-                type,
-                this.gameObject,
-                BSM.HeroesInBattle[Random.Range(0, BSM.HeroesInBattle.Count)]);
-        BSM.CollectActions (myAttack);
-    }
+    
 }

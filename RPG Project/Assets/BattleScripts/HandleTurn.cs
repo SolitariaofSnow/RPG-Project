@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 [System.Serializable]
 public class HandleTurn{
+#nullable enable
+
     public HandleTurn(string Attacker, string Type, GameObject AttackerGameObject, GameObject? DefenderGameObject = null)
     {
         Name = Attacker;

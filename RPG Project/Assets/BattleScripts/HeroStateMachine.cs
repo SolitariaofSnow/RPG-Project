@@ -9,11 +9,22 @@ using UnityEngine.UI;
 public class HeroStateMachine : Fighter {
     public BaseHero hero;
 
-    public override void Start() {
+    public override void Start()
+    {
         base.Start();
         type = "Hero";
     }
 
+    public override void UpdateProgressBar()
+    {
+        cur_cooldown = cur_cooldown + Time.deltaTime;
+        float calc_cooldown = cur_cooldown / max_cooldown;
+        ProgressBar.transform.localScale = new Vector3(Mathf.Clamp(calc_cooldown, 0, 1), ProgressBar.transform.localScale.y, ProgressBar.transform.localScale.z);
+        if (cur_cooldown >= max_cooldown)
+        {
+            CurrentState = TurnState.ADDTOLIST;
+        }
+    }
     public override void Update()
     {
         switch(CurrentState)
@@ -49,14 +60,7 @@ public class HeroStateMachine : Fighter {
                 break;
         };
     }
-    public override void UpdateProgressBar()
-    {
-        cur_cooldown = cur_cooldown + Time.deltaTime;
-        float calc_cooldown = cur_cooldown / max_cooldown;
-        ProgressBar.transform.localScale = new Vector3(Mathf.Clamp(calc_cooldown, 0, 1), ProgressBar.transform.localScale.y, ProgressBar.transform.localScale.z);
-        if(cur_cooldown >= max_cooldown)
-        {
-            CurrentState = TurnState.ADDTOLIST;
-        }
+    
+    
     }
-}
+
